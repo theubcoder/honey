@@ -1,28 +1,43 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const WishlistContext = createContext();
 
 export function WishlistProvider({ children }) {
   const [wishlistItems, setWishlistItems] = useState([]);
+  const { isLoaded, isSignedIn } = useUser();
+  const router = useRouter();
 
   // Load from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem("wishlist");
-    if (saved) {
-      try {
-        setWishlistItems(JSON.parse(saved));
-      } catch {}
+    if (isLoaded && isSignedIn) {
+      const saved = localStorage.getItem("wishlist");
+      if (saved) {
+        try {
+          setWishlistItems(JSON.parse(saved));
+        } catch {}
+      }
     }
-  }, []);
+  }, [isLoaded, isSignedIn]);
 
   // Save to localStorage on change
   useEffect(() => {
-    localStorage.setItem("wishlist", JSON.stringify(wishlistItems));
-  }, [wishlistItems]);
+    if (isLoaded && isSignedIn) {
+      localStorage.setItem("wishlist", JSON.stringify(wishlistItems));
+    }
+  }, [wishlistItems, isLoaded, isSignedIn]);
 
   const toggleWishlist = (product) => {
+    if (!isLoaded) return;
+    
+    if (!isSignedIn) {
+      router.push("/sign-in");
+      return;
+    }
+    
     setWishlistItems((prev) => {
       const exists = prev.find((item) => item.id === product.id);
       if (exists) {
