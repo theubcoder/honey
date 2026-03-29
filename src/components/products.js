@@ -24,6 +24,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useCart } from "@/context/CartContext";
+import { SignInButton, useUser } from "@clerk/nextjs";
 
 const RatingStars = ({ rating }) => (
   <div className="flex gap-1">
@@ -41,6 +42,7 @@ const RatingStars = ({ rating }) => (
 export function Products() {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { isSignedIn } = useUser();
   const [products, setProducts] = useState([]);
   const [loadingId, setLoadingId] = useState(null);
   const [modalProduct, setModalProduct] = useState(null);
@@ -54,6 +56,14 @@ export function Products() {
       .then((res) => res.json())
       .then((data) => setProducts(data.products));
   }, []);
+
+  const handleWishlistClick = (product) => {
+    if (!isSignedIn) {
+      document.getElementById('hidden-signin-trigger')?.click();
+      return;
+    }
+    toggleWishlist(product);
+  };
 
   const handleAddToCart = (product, quantity = 1) => {
     setLoadingId(product.id);
@@ -109,7 +119,7 @@ export function Products() {
                       <div className="flex flex-col absolute top-8 right-3 gap-2 translate-x-6 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out z-10">
                         <div
                           className="bg-white p-1 rounded-full cursor-pointer hover:bg-primary"
-                          onClick={() => toggleWishlist({ id: e.id, image: e.images[0], description: e.description, price: parseInt(e.pricing) })}
+                          onClick={() => handleWishlistClick({ id: e.id, image: e.images[0], description: e.description, price: parseInt(e.pricing) })}
                         >
                           <Heart size={20} className={isInWishlist(e.id) ? "fill-black text-black" : ""} />
                         </div>

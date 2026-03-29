@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
+import { SignInButton, useUser } from "@clerk/nextjs";
 import Subscribe from "@/components/subscribe";
 
 /* ── Rating Stars ── */
@@ -467,6 +468,7 @@ export default function ProductPage() {
   const { id } = useParams();
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { isSignedIn } = useUser();
 
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
@@ -476,6 +478,14 @@ export default function ProductPage() {
   const [addingToCart, setAddingToCart] = useState(false);
   const [imgLoading, setImgLoading] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+
+  const handleWishlistClick = (product) => {
+    if (!isSignedIn) {
+      document.getElementById('hidden-signin-trigger')?.click();
+      return;
+    }
+    toggleWishlist(product);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -668,7 +678,7 @@ export default function ProductPage() {
               <div className="flex items-center gap-6 text-sm text-gray-500 mt-1">
                 <button
                   className={`flex items-center gap-1.5 transition-colors cursor-pointer ${isInWishlist(product.id) ? "text-black" : "hover:text-black"}`}
-                  onClick={() => toggleWishlist({ id: product.id, image: product.images[0], description: product.description, price: parseInt(product.pricing) })}
+                  onClick={() => handleWishlistClick({ id: product.id, image: product.images[0], description: product.description, price: parseInt(product.pricing) })}
                 >
                   <Heart size={16} className={isInWishlist(product.id) ? "fill-black" : ""} />
                   {isInWishlist(product.id) ? "In Wishlist" : "Add To Wishlist"}

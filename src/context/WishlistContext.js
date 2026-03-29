@@ -1,15 +1,14 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useUser, SignInButton } from "@clerk/nextjs";
 
 const WishlistContext = createContext();
 
 export function WishlistProvider({ children }) {
   const [wishlistItems, setWishlistItems] = useState([]);
   const { isLoaded, isSignedIn } = useUser();
-  const router = useRouter();
+  const [pendingProduct, setPendingProduct] = useState(null);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -34,7 +33,7 @@ export function WishlistProvider({ children }) {
     if (!isLoaded) return;
     
     if (!isSignedIn) {
-      router.push("/sign-in");
+      setPendingProduct(product);
       return;
     }
     
@@ -65,9 +64,14 @@ export function WishlistProvider({ children }) {
         isInWishlist,
         removeFromWishlist,
         getWishlistCount,
+        pendingProduct,
       }}
     >
       {children}
+      {/* Hidden SignInButton to trigger modal */}
+      <SignInButton mode="modal">
+        <div id="hidden-signin-trigger" style={{ display: "none" }} />
+      </SignInButton>
     </WishlistContext.Provider>
   );
 }

@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
+import { SignInButton, useUser } from "@clerk/nextjs";
 
 function slugToTitle(slug) {
   return slug
@@ -121,15 +122,28 @@ function SidebarSection({ title, children }) {
 
 function ActionIcons({ vertical, onQuickView, product }) {
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { isSignedIn } = useUser();
   const inWishlist = product && isInWishlist(product.id);
   const base =
     "w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 bg-white hover:bg-primary hover:border-yellow-400 transition-colors cursor-pointer";
+
+  const handleWishlistClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!product) return;
+    if (!isSignedIn) {
+      document.getElementById('hidden-signin-trigger')?.click();
+      return;
+    }
+    toggleWishlist({ id: product.id, image: product.images?.[0], description: product.description, price: parseInt(product.pricing) });
+  };
+
   return (
     <div className={`flex ${vertical ? "flex-col" : ""} gap-2`}>
       <button
         className={base}
         title="Wishlist"
-        onClick={(e) => { e.preventDefault(); e.stopPropagation(); product && toggleWishlist({ id: product.id, image: product.images?.[0], description: product.description, price: parseInt(product.pricing) }); }}
+        onClick={handleWishlistClick}
       >
         <Heart size={15} className={inWishlist ? "fill-black text-black" : "text-gray-500"} />
       </button>
