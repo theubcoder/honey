@@ -109,30 +109,31 @@ export function Feature_products() {
 
   return (
     <>
-      <div className="flex max-w-[85rem] m-auto justify-center items-center mt-10 sm:p-0 px-10">
+      <div className="w-full px-4 sm:px-6 lg:px-10 mt-10">
+        <div className="max-w-[85rem] mx-auto">
         <Carousel opts={{ align: "start" }} className="w-full">
           <CarouselContent className="-ml-2 sm:-ml-4">
             {products.map((e, idx) => (
-              <CarouselItem key={idx} className="pl-2 sm:pl-4 basis-1/2 lg:basis-1/4">
+              <CarouselItem key={idx} className="pl-2 sm:pl-4 basis-full sm:basis-1/2 lg:basis-1/4">
                 <div className="p-1 relative">
                   <Card className="pt-0 group relative overflow-hidden">
                     <CardContent className="flex flex-col p-0">
                       {/* Hover icons */}
-                      <div className="flex flex-col absolute top-8 right-3 gap-2 translate-x-6 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out z-10">
+                      <div className="flex flex-col absolute top-2 right-2 sm:top-8 sm:right-3 gap-1 sm:gap-2 translate-x-6 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out z-10">
                         <div
                           className="bg-white p-1 rounded-full cursor-pointer hover:bg-primary"
                           onClick={() => handleWishlistClick({ id: e.id, image: e.images[0], description: e.description, price: parseInt(e.pricing) })}
                         >
-                          <Heart size={20} className={isInWishlist(e.id) ? "fill-black text-black" : ""} />
+                          <Heart size={16} className="sm:w-5 sm:h-5" />
                         </div>
                         <div className="bg-white p-1 rounded-full cursor-pointer hover:bg-primary">
-                          <ChartNoAxesColumn size={20} />
+                          <ChartNoAxesColumn size={16} className="sm:w-5 sm:h-5" />
                         </div>
                         <div
                           className="bg-white p-1 rounded-full cursor-pointer hover:bg-primary"
                           onClick={() => openModal(e)}
                         >
-                          <Eye size={20} />
+                          <Eye size={16} className="sm:w-5 sm:h-5" />
                         </div>
                       </div>
 
@@ -144,34 +145,34 @@ export function Feature_products() {
                           alt={e.description}
                           width={200}
                           height={200}
-                          className="object-contain max-h-[140px] sm:max-h-[200px]"
+                          className="object-contain max-h-[120px] sm:max-h-[200px]"
                         />
                       </div>
                       </Link>
 
-                      <div className="flex flex-col items-center px-2 sm:px-3">
+                      <div className="flex flex-col items-center px-2 sm:px-3 py-2 sm:py-0">
                         <Link href={`/product/${e.id}`}>
-                        <h3 className="line-clamp-2 my-2 sm:my-4 text-xs sm:text-base text-center hover:text-primary transition-colors">
+                        <h3 className="line-clamp-2 my-1 sm:my-2 text-[11px] sm:text-base text-center hover:text-primary transition-colors min-h-[2.5rem] sm:min-h-0">
                           {e.description}
                         </h3>
                         </Link>
                         <RatingStars rating={e.rating} />
-                        <span className="flex gap-2 font-bold justify-center my-2 sm:my-4 text-sm sm:text-base">
-                          <h3 className="text-gray-500 line-through">{e.discount}</h3>
-                          <h3>${e.pricing}</h3>
+                        <span className="flex gap-1 sm:gap-2 font-bold justify-center my-1 sm:my-2 text-xs sm:text-base">
+                          <h3 className="text-gray-500 line-through text-xs sm:text-base">{e.discount}</h3>
+                          <h3 className="text-xs sm:text-base">${e.pricing}</h3>
                         </span>
                         <button
                           onClick={() => handleAddToCart(e)}
                           disabled={loadingId === e.id}
-                          className={`inline-block w-28 sm:w-40 bg-primary hover:text-white py-2 sm:py-3 rounded-full text-[11px] sm:text-[13px] font-bold hover:bg-black transition-all mb-3 cursor-pointer ${
+                          className={`inline-block w-full max-w-[160px] sm:max-w-[160px] bg-primary hover:text-white py-2 sm:py-3 rounded-full text-[10px] sm:text-[13px] font-bold hover:bg-black transition-all mb-2 sm:mb-3 cursor-pointer ${
                             loadingId === e.id ? "opacity-60 pointer-events-none" : ""
                           }`}
                         >
                           <div className="flex items-center justify-center gap-1 sm:gap-2">
-                            <ShoppingCart size={16} className="sm:w-[18px] sm:h-[18px]" />
+                            <ShoppingCart size={14} className="sm:w-[18px] sm:h-[18px]" />
                             ADD TO CART
                             {loadingId === e.id && (
-                              <LoaderCircle size={16} className="animate-spin" />
+                              <LoaderCircle size={14} className="animate-spin" />
                             )}
                           </div>
                         </button>
@@ -185,6 +186,7 @@ export function Feature_products() {
           <CarouselPrevious className="z-20 left-0 sm:left-2 md:-left-4" />
           <CarouselNext className="z-20 right-0 sm:right-2 md:-right-4" />
         </Carousel>
+        </div>
       </div>
 
       {/* Quick View Modal */}

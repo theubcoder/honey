@@ -31,7 +31,7 @@ const ChooseUs = () => {
 
       {/* Main Content Container */}
       <div className="container mx-auto relative z-10">
-        <div className="text-center py-12">
+        <div className="text-center sm:py-12 py-8">
           <h2 className="text-4xl font-great-vibes text-primary">Why Choose Us</h2>
           <h1 className="text-3xl sm:text-4xl font-bold">
             Why Choose Our Products

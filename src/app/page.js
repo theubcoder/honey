@@ -17,7 +17,7 @@ export default function Home() {
       {/* Feature Section  */}
       <div className="flex-col text-center mt-20">
         <h2 className="text-4xl font-great-vibes">Best Feature</h2>
-        <h1 className="text-3xl sm:text-4xl font-bold">
+        <h1 className="text-3xl text-center w-100 sm:w-auto sm:text-4xl font-bold">
           We Provide The Best Quality
         </h1>
         <Feature />
