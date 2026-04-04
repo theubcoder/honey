@@ -57,10 +57,10 @@ const Feature = () => {
       </div>
 
       {/* shop now cards  */}
-      <div className="flex flex-col sm:flex-row flex-wrap gap-6 sm:gap-10 my-16 sm:my-20">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10 my-16 sm:my-20">
 
-        <div className="flex flex-col sm:flex-row bg-primary p-6 sm:p-10 rounded-[5px] w-full">
-          <div className="text-center sm:text-start mb-4 sm:mb-0">
+        <div className="flex flex-col-reverse sm:flex-row bg-primary p-6 sm:p-10 rounded-[5px]">
+          <div className="text-center sm:text-start mb-4 sm:mb-0 flex-1">
             <h3 className="text-2xl sm:text-4xl font-great-vibes">100% natural</h3>
             <h5 className="sm:text-4xl text-xl font-bold mt-2 mb-6 sm:mb-10">Best Summer Sale 50% OFF</h5>
             <Link
@@ -70,17 +70,19 @@ const Feature = () => {
               SHOP NOW
             </Link>
           </div>
-          <Image
-            src="/images/cup-tea.png"
-            alt="Honey Image"
-            width={180}
-            height={180}
-            className="w-full sm:w-auto max-w-[180px] sm:max-w-[260px] mx-auto overflow-hidden transition-transform duration-300 transform hover:scale-110"
-          />
+          <div className="flex-shrink-0 sm:ml-6">
+            <Image
+              src="/images/cup-tea.png"
+              alt="Honey Image"
+              width={260}
+              height={260}
+              className="w-[180px] sm:w-[260px] mx-auto overflow-hidden transition-transform duration-300 transform hover:scale-110"
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row text-start bg-primary p-6 sm:p-10 rounded-[5px] w-full">
-          <div className="text-center sm:text-start mb-4 sm:mb-0">
+        <div className="flex flex-col-reverse sm:flex-row text-start bg-primary p-6 sm:p-10 rounded-[5px]">
+          <div className="text-center sm:text-start mb-4 sm:mb-0 flex-1">
             <h3 className="text-2xl sm:text-4xl font-great-vibes">Delight taste</h3>
             <h5 className="sm:text-4xl text-xl font-bold mt-2 mb-6 sm:mb-10">100% Natural Bee Honeycomb</h5>
             <Link
@@ -90,13 +92,15 @@ const Feature = () => {
               SHOP NOW
             </Link>
           </div>
-          <Image
-            src="/images/honey-cumb.png"
-            alt="Honey Image"
-            width={180}
-            height={180}
-            className="w-full sm:w-auto max-w-[180px] sm:max-w-[260px] mx-auto overflow-hidden transition-transform duration-300 transform hover:scale-110"
-          />
+          <div className="flex-shrink-0 sm:ml-6">
+            <Image
+              src="/images/honey-jar.png"
+              alt="Honey Image"
+              width={260}
+              height={260}
+              className="w-[180px] sm:w-[260px] mx-auto overflow-hidden transition-transform duration-300 transform hover:scale-110"
+            />
+          </div>
         </div>
       </div>
       </div>

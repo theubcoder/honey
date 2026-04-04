@@ -53,12 +53,12 @@ function ProductTabs({ product }) {
   const [activeTab, setActiveTab] = useState(0);
   return (
     <div>
-      <div className="flex border-b border-gray-200 gap-1">
+      <div className="flex border-b border-gray-200 gap-1 overflow-x-auto">
         {tabList.map((tab, i) => (
           <button
             key={tab}
             onClick={() => setActiveTab(i)}
-            className={`px-5 py-3 text-sm font-semibold transition-colors cursor-pointer ${
+            className={`px-3 sm:px-5 py-3 text-xs sm:text-sm font-semibold transition-colors cursor-pointer whitespace-nowrap ${
               activeTab === i
                 ? "border-b-2 border-yellow-400 text-black"
                 : "text-gray-400 hover:text-gray-600"
@@ -68,11 +68,11 @@ function ProductTabs({ product }) {
           </button>
         ))}
       </div>
-      <div className="py-6 text-sm text-gray-600 leading-relaxed min-h-[120px]">
+      <div className="py-6 text-xs sm:text-sm text-gray-600 leading-relaxed min-h-[120px]">
         {activeTab === 0 && (
           <div>
             <h3 className="font-bold text-black text-base mb-3">Product Description</h3>
-            <p>{product.details || product.description}</p>
+            <p className="text-xs sm:text-sm">{product.details || product.description}</p>
             <ul className="mt-4 space-y-2">
               <li className="flex items-start gap-2"><Check size={16} className="text-green-500 mt-0.5 shrink-0" /> 100% Pure and Natural Honey</li>
               <li className="flex items-start gap-2"><Check size={16} className="text-green-500 mt-0.5 shrink-0" /> No added sugar or preservatives</li>
@@ -81,14 +81,14 @@ function ProductTabs({ product }) {
             </ul>
           </div>
         )}
-        {activeTab === 1 && <p className="text-gray-400">No reviews yet. Be the first to review this product!</p>}
-        {activeTab === 2 && <p className="text-gray-400">No questions have been asked about this product yet.</p>}
+        {activeTab === 1 && <p className="text-gray-400 text-xs sm:text-sm">No reviews yet. Be the first to review this product!</p>}
+        {activeTab === 2 && <p className="text-gray-400 text-xs sm:text-sm">No questions have been asked about this product yet.</p>}
         {activeTab === 3 && (
           <div>
-            <h4 className="font-bold text-black mb-2">Shipping</h4>
-            <p>Free shipping on orders over $100. Standard delivery takes 3-5 business days.</p>
-            <h4 className="font-bold text-black mb-2 mt-4">Returns</h4>
-            <p>Easy 30-day returns. Product must be unopened and in original packaging.</p>
+            <h4 className="font-bold text-black mb-2 text-sm">Shipping</h4>
+            <p className="text-xs sm:text-sm">Free shipping on orders over $100. Standard delivery takes 3-5 business days.</p>
+            <h4 className="font-bold text-black mb-2 mt-4 text-sm">Returns</h4>
+            <p className="text-xs sm:text-sm">Easy 30-day returns. Product must be unopened and in original packaging.</p>
           </div>
         )}
       </div>
@@ -135,7 +135,7 @@ function AboutSection({ product }) {
 }
 
 /* ── Quick Comparison ── */
-function QuickComparison({ products }) {
+function QuickComparison({ products, onAddToCart }) {
   if (!products || products.length === 0) return null;
   const compareItems = products.slice(0, 5);
 
@@ -182,12 +182,15 @@ function QuickComparison({ products }) {
               <td className="p-3 font-bold text-gray-500">Action</td>
               {compareItems.map((p) => (
                 <td key={p.id} className="p-3 text-center">
-                  <Link
-                    href={`/product/${p.id}`}
-                    className="inline-flex items-center gap-1 bg-primary hover:bg-black hover:text-white text-[11px] font-bold py-2 px-4 rounded-full transition-colors"
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onAddToCart && onAddToCart(p);
+                    }}
+                    className="inline-flex items-center gap-1 bg-primary hover:bg-black hover:text-white text-[11px] font-bold py-2 px-4 rounded-full transition-colors cursor-pointer"
                   >
                     <ShoppingCart size={12} /> ADD TO CART
-                  </Link>
+                  </button>
                 </td>
               ))}
             </tr>
@@ -215,38 +218,39 @@ function QuickComparison({ products }) {
 }
 
 /* ── Related Products ── */
-function RelatedProducts({ products }) {
+function RelatedProducts({ products, onAddToCart }) {
   if (!products || products.length === 0) return null;
   return (
     <div className="py-10 border-t border-gray-100">
       <h2 className="text-2xl font-bold text-center mb-8">Related Products</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-        {products.slice(0, 4).map((p) => {
+      <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
+        {products.slice(0, 8).map((p) => {
           const discountPct =
             p.originalPrice && p.pricing
               ? Math.round((1 - p.pricing / p.originalPrice) * 100)
               : null;
           return (
-            <Link
+            <div
               key={p.id}
-              href={`/product/${p.id}`}
-              className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow group"
+              className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow group min-w-[260px] snap-center flex flex-col"
             >
-              <div className="relative bg-[#F5F5F5] h-[200px] flex items-center justify-center p-6">
-                {discountPct && (
-                  <span className="absolute top-3 left-3 bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded z-10">
-                    -{discountPct}%
-                  </span>
-                )}
-                <Image
-                  src={p.images[0]}
-                  alt={p.description}
-                  width={140}
-                  height={140}
-                  className="object-contain max-h-full group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <div className="p-4 flex flex-col gap-2 text-center">
+              <Link href={`/product/${p.id}`} className="block">
+                <div className="relative bg-[#F5F5F5] h-[200px] flex items-center justify-center p-6">
+                  {discountPct && (
+                    <span className="absolute top-3 left-3 bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded z-10">
+                      -{discountPct}%
+                    </span>
+                  )}
+                  <Image
+                    src={p.images[0]}
+                    alt={p.description}
+                    width={140}
+                    height={140}
+                    className="object-contain max-h-full group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              </Link>
+              <div className="p-4 flex flex-col gap-2 text-center flex-1">
                 <h3 className="text-sm font-medium line-clamp-2 leading-snug min-h-[2.5rem]">
                   {p.description}
                 </h3>
@@ -261,11 +265,17 @@ function RelatedProducts({ products }) {
                   )}
                   <span>${p.pricing}</span>
                 </div>
-                <button className="mx-auto flex items-center justify-center gap-2 bg-primary hover:bg-black hover:text-white text-xs font-bold py-2 px-5 rounded-full transition-colors cursor-pointer mt-1">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onAddToCart && onAddToCart(p);
+                  }}
+                  className="mx-auto flex items-center justify-center gap-2 bg-primary hover:bg-black hover:text-white text-xs font-bold py-2 px-5 rounded-full transition-colors cursor-pointer mt-1"
+                >
                   <ShoppingCart size={13} /> ADD TO CART
                 </button>
               </div>
-            </Link>
+            </div>
           );
         })}
       </div>
@@ -515,6 +525,20 @@ export default function ProductPage() {
     }, 800);
   };
 
+  const handleRelatedAddToCart = (relatedProduct) => {
+    if (!relatedProduct) return;
+    setAddingToCart(true);
+    setTimeout(() => {
+      addToCart({
+        id: relatedProduct.id,
+        image: relatedProduct.images[0],
+        description: relatedProduct.description,
+        price: parseInt(relatedProduct.pricing),
+      }, 1);
+      setAddingToCart(false);
+    }, 800);
+  };
+
   const prevImage = () => {
     if (!product) return;
     setImgLoading(true);
@@ -566,30 +590,9 @@ export default function ProductPage() {
           <div className="flex flex-col lg:flex-row gap-10">
 
             {/* LEFT — Image Gallery */}
-            <div className="lg:w-[50%] flex  gap-4">
-              {/* Thumbnails */}
-              <div className="flex flex-col gap-3 w-[80px] shrink-0">
-                {product.images.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => { setImgLoading(true); setSelectedImg(i); }}
-                    className={`border-2 rounded-lg overflow-hidden p-2 bg-[#F5F5F5] cursor-pointer transition-all ${
-                      selectedImg === i ? "border-yellow-400" : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    <Image
-                      src={img}
-                      alt={`Thumbnail ${i + 1}`}
-                      width={60}
-                      height={60}
-                      className="object-contain w-full h-[50px]"
-                    />
-                  </button>
-                ))}
-              </div>
-
+            <div className="lg:w-[50%] flex flex-col gap-4">
               {/* Main Image */}
-              <div className="relative flex-1 bg-[#F5F5F5] rounded-xl overflow-hidden flex items-center justify-center min-h-[400px]">
+              <div className="relative bg-[#F5F5F5] rounded-xl overflow-hidden flex items-center justify-center min-h-[400px]">
                 {imgLoading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-[#F5F5F5]/80 z-10">
                     <LoaderCircle size={38} className="animate-spin text-primary" />
@@ -616,6 +619,27 @@ export default function ProductPage() {
                 >
                   <ChevronRight size={18} />
                 </button>
+              </div>
+
+              {/* Thumbnails - Row below on mobile */}
+              <div className="flex flex-row gap-3 overflow-x-auto pb-2">
+                {product.images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => { setImgLoading(true); setSelectedImg(i); }}
+                    className={`border-2 rounded-lg overflow-hidden p-2 bg-[#F5F5F5] cursor-pointer transition-all flex-shrink-0 ${
+                      selectedImg === i ? "border-yellow-400" : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <Image
+                      src={img}
+                      alt={`Thumbnail ${i + 1}`}
+                      width={60}
+                      height={60}
+                      className="object-contain w-[60px] h-[60px]"
+                    />
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -747,10 +771,10 @@ export default function ProductPage() {
           <AboutSection product={product} />
 
           {/* ──────── Quick Comparison ──────── */}
-          <QuickComparison products={[product, ...related.slice(0, 4)]} />
+          <QuickComparison products={[product, ...related.slice(0, 4)]} onAddToCart={handleRelatedAddToCart} />
 
           {/* ──────── Related Products ──────── */}
-          <RelatedProducts products={related} />
+          <RelatedProducts products={related} onAddToCart={handleRelatedAddToCart} />
         </div>
       </div>
 

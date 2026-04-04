@@ -124,6 +124,16 @@ function CartDrawer() {
     FREE_DELIVERY_THRESHOLD,
   } = useCart();
 
+  const [cartClosing, setCartClosing] = useState(false);
+
+  const handleCartClose = () => {
+    setCartClosing(true);
+    setTimeout(() => {
+      setIsCartOpen(false);
+      setCartClosing(false);
+    }, 300);
+  };
+
   const subtotal = getSubtotal();
   const remaining = amountForFreeDelivery();
   const progress = Math.min((subtotal / FREE_DELIVERY_THRESHOLD) * 100, 100);
@@ -131,17 +141,19 @@ function CartDrawer() {
   return (
     <>
       {/* Overlay */}
-      {isCartOpen && (
+      {(isCartOpen || cartClosing) && (
         <div
-          className="fixed inset-0 bg-black/50 z-[200]"
-          onClick={() => setIsCartOpen(false)}
+          className={`fixed inset-0 bg-black/50 z-[200] transition-opacity duration-300 ${
+            cartClosing ? "opacity-0" : "opacity-100"
+          }`}
+          onClick={handleCartClose}
         />
       )}
 
       {/* Drawer */}
       <div
         className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-[201] transform transition-transform duration-300 ease-in-out ${
-          isCartOpen ? "translate-x-0" : "translate-x-full"
+          isCartOpen && !cartClosing ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
@@ -149,7 +161,7 @@ function CartDrawer() {
           <div className="flex items-center justify-between p-4 border-b">
             <h2 className="text-lg font-bold">Shopping Cart</h2>
             <button
-              onClick={() => setIsCartOpen(false)}
+              onClick={handleCartClose}
               className="p-1 hover:bg-gray-100 rounded-full cursor-pointer"
             >
               <X className="w-5 h-5" />
@@ -289,6 +301,7 @@ const shopByCategories = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuClosing, setMobileMenuClosing] = useState(false);
   const [bestSelling, setBestSelling] = useState([]);
   const [organicProducts, setOrganicProducts] = useState([]);
   const [rawProducts, setRawProducts] = useState([]);
@@ -301,6 +314,14 @@ export default function Header() {
   const [navValue, setNavValue] = useState("");
   const { getCartCount, setIsCartOpen, addToCart } = useCart();
   const cartCount = getCartCount();
+
+  const handleMobileMenuClose = () => {
+    setMobileMenuClosing(true);
+    setTimeout(() => {
+      setMobileMenuOpen(false);
+      setMobileMenuClosing(false);
+    }, 300);
+  };
 
   const closeNav = () => setNavValue("");
 
@@ -416,18 +437,22 @@ export default function Header() {
     </header>
 
     {/* Mobile Menu Drawer */}
-    {mobileMenuOpen && (
+    {(mobileMenuOpen || mobileMenuClosing) && (
       <div className="fixed inset-0 z-[100] sm:hidden">
         {/* Overlay */}
         <div
-          className="absolute inset-0 bg-black/50"
-          onClick={() => setMobileMenuOpen(false)}
+          className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${
+            mobileMenuClosing ? "opacity-0" : "opacity-100"
+          }`}
+          onClick={handleMobileMenuClose}
         />
         {/* Drawer */}
-        <div className="absolute top-0 left-0 h-full w-72 bg-white shadow-xl overflow-y-auto animate-in slide-in-from-left duration-300">
+        <div className={`absolute top-0 left-0 h-full w-72 bg-white shadow-xl overflow-y-auto transition-transform duration-300 ease-in-out ${
+          mobileMenuOpen && !mobileMenuClosing ? "translate-x-0" : "-translate-x-full"
+        }`}>
           {/* Drawer Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+            <Link href="/" onClick={handleMobileMenuClose}>
               <Image
                 src="/images/logo.png"
                 alt="HoneyWeb Logo"
@@ -437,7 +462,7 @@ export default function Header() {
               />
             </Link>
             <button
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={handleMobileMenuClose}
               className="p-1 rounded-full hover:bg-gray-100 cursor-pointer"
             >
               <X className="w-5 h-5 text-gray-600" />
@@ -450,7 +475,7 @@ export default function Header() {
               <MobileMenuItem
                 key={item.label}
                 item={item}
-                onClose={() => setMobileMenuOpen(false)}
+                onClose={handleMobileMenuClose}
               />
             ))}
           </nav>
