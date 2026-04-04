@@ -50,10 +50,10 @@ const mobileMenuLinks = [
   {
     label: "Quick Links",
     children: [
-      { label: "Shopping Cart", href: "/cart" },
-      { label: "Checkout", href: "/checkout" },
-      { label: "Wishlist", href: "/wishlist" },
+      // { label: "Shopping Cart", href: "/cart" },
+      { label: "About Us", href: "/about" },
       { label: "Contact Us", href: "/contact" },
+      { label: "FAQ", href: "/faq" },
     ],
   },
 ];
